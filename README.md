@@ -1,4 +1,4 @@
-# ScriptsBash
+# PdfEditBash
 Bash scripts for operating on data files belonging to particular forms.
 There will be the following scripts produced.
 + _makedata.sh_ - interactive script to make the form data from users measurements.
