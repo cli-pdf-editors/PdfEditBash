@@ -1,0 +1,31 @@
+InfoBegin
+InfoKey: ModDate
+InfoValue: D:20180710141656+07'00'
+InfoBegin
+InfoKey: CreationDate
+InfoValue: D:20180710141656+08'00'
+InfoBegin
+InfoKey: Author
+InfoValue: Manee
+InfoBegin
+InfoKey: Title
+InfoValue: Final For lay
+InfoBegin
+InfoKey: Creator
+InfoValue: Adobe Illustrator CC 2017 (Windows)
+InfoBegin
+InfoKey: Producer
+InfoValue: Adobe PDF library 15.00
+PdfID0: 374907b81a59ab42a5298afbec730798
+PdfID1: 94a098613a846245b0e779f23c8834dd
+NumberOfPages: 2
+PageMediaBegin
+PageMediaNumber: 1
+PageMediaRotation: 0
+PageMediaRect: 0 0 606.614 853.229
+PageMediaDimensions: 606.614 853.229
+PageMediaBegin
+PageMediaNumber: 2
+PageMediaRotation: 0
+PageMediaRect: 0 0 606.615 853.229
+PageMediaDimensions: 606.615 853.229

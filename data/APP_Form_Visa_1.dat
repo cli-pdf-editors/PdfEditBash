@@ -1,0 +1,12 @@
+Mr,49,705,X,stable
+Mrs,85,705,X,stable
+Miss,120,705,X,stable
+First Name,200,707,FIRSTNAME,stable
+Middle Name,280,707,MIDDLENAME,stable
+Family Name,400,707,FAMILYNAME,stable
+Nationality,130,662,Nationality,stable
+Nationality at birth,175,640,Nationality at birth,stable
+Place of birth,155,618,Where born,stable
+Marital status,175,596,Separated,stable
+Date of birth,130,574,01 Jan 1970,stable
+Passport/Travel Doc,207,552,PN12345678,stable

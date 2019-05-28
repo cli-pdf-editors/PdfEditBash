@@ -1,0 +1,53 @@
+%% set up a font that may do the job
+/Helvetica findfont
+%% Scale the font
+10 scalefont
+setfont
+%%Mr
+newpath
+49 705 moveto
+(X) show
+%%Mrs
+newpath
+85 705 moveto
+(X) show
+%%Miss
+newpath
+120 705 moveto
+(X) show
+%%First Name
+newpath
+200 707 moveto
+(FIRSTNAME) show
+%%Middle Name
+newpath
+280 707 moveto
+(MIDDLENAME) show
+%%Family Name
+newpath
+400 707 moveto
+(FAMILYNAME) show
+%%Nationality
+newpath
+130 662 moveto
+(Nationality) show
+%%Nationality at birth
+newpath
+175 640 moveto
+(Nationality at birth) show
+%%Place of birth
+newpath
+155 618 moveto
+(Where born) show
+%%Marital status
+newpath
+175 596 moveto
+(Separated) show
+%%Date of birth
+newpath
+130 574 moveto
+(01 Jan 1970) show
+%%Passport/Travel Doc
+newpath
+207 552 moveto
+(PN12345678) show
