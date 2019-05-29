@@ -1,19 +1,19 @@
 %% set up a font that may do the job
 /Helvetica findfont
 %% Scale the font
-10 scalefont
+8 scalefont
 setfont
 %%Mr
 newpath
-49 705 moveto
+50 706 moveto
 (X) show
 %%Mrs
 newpath
-85 705 moveto
+85 706 moveto
 (X) show
 %%Miss
 newpath
-120 705 moveto
+120 706 moveto
 (X) show
 %%First Name
 newpath
@@ -21,7 +21,7 @@ newpath
 (FIRSTNAME) show
 %%Middle Name
 newpath
-280 707 moveto
+288 707 moveto
 (MIDDLENAME) show
 %%Family Name
 newpath
@@ -51,3 +51,43 @@ newpath
 newpath
 207 552 moveto
 (PN12345678) show
+%%Place of Issue
+newpath
+135 530 moveto
+(Where issued) show
+%%Date of Issue
+newpath
+145 508 moveto
+(01 Jan 1970) show
+%%Date of Expiry
+newpath
+160 486 moveto
+(01 Jan 2000) show
+%%Occuptaion
+newpath
+50 442 moveto
+(Retired) show
+%%Address in Lao1
+newpath
+195 421 moveto
+(Funky Monkey Hostel) show
+%%Address in Lao2
+newpath
+50 398 moveto
+(Rue Francois Ngin Chanthabouly District Fa Ngum Road 856 Vientiane) show
+%%Tel Lao Residence
+newpath
+90 376 moveto
+(+82 10-1235-6789) show
+%%Address home country1
+newpath
+222 354 moveto
+(Unit 99) show
+%%Address home country2
+newpath
+50 333 moveto
+(999 Some Road Some Suburb) show
+%%Address home country3
+newpath
+50 317 moveto
+(Some State Some Country 99999) show

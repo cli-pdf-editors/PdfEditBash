@@ -1,8 +1,8 @@
-Mr,49,705,X,stable
-Mrs,85,705,X,stable
-Miss,120,705,X,stable
+Mr,50,706,X,stable
+Mrs,85,706,X,stable
+Miss,120,706,X,stable
 First Name,200,707,FIRSTNAME,stable
-Middle Name,280,707,MIDDLENAME,stable
+Middle Name,288,707,MIDDLENAME,stable
 Family Name,400,707,FAMILYNAME,stable
 Nationality,130,662,Nationality,stable
 Nationality at birth,175,640,Nationality at birth,stable
@@ -10,3 +10,13 @@ Place of birth,155,618,Where born,stable
 Marital status,175,596,Separated,stable
 Date of birth,130,574,01 Jan 1970,stable
 Passport/Travel Doc,207,552,PN12345678,stable
+Place of Issue,135,530,Where issued,stable
+Date of Issue,145,508,01 Jan 1970,stable
+Date of Expiry,160,486,01 Jan 2000,stable
+Occuptaion,50,442,Retired,stable
+Address in Lao1,195,421,Funky Monkey Hostel,variable
+Address in Lao2,50,398,Rue Francois Ngin Chanthabouly District Fa Ngum Road 856 Vientiane,variable
+Tel Lao Residence,90,376,+82 10-1235-6789,variable
+Address home country1,222,354,Unit 99,stable
+Address home country2,50,333,999 Some Road Some Suburb,stable
+Address home country3,50,317,Some State Some Country 99999,stable

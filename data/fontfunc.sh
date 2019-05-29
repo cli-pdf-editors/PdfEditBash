@@ -10,6 +10,6 @@ setfont()
   echo '%% set up a font that may do the job' >> "$fn"
   echo /Helvetica findfont >> "$fn"
   echo '%% Scale the font' >> "$fn"
-  echo 10 scalefont >> "$fn"
+  echo 8 scalefont >> "$fn"
   echo setfont >> "$fn"
 }
