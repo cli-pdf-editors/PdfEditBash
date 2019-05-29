@@ -32,5 +32,11 @@ Purpose of visit1,185,99,Holiday,stable
 Purpose of visit2,55,82,_,variable
 Purpose of visit3,55,64,_,variable
 Number of Entries Single,201,47,X,stable
-Number of Entries Multiple,201,27,X,variable
-Number of Entries Multi Reason,55,27,X,variable
+Number of Entries Multiple,201,27,_,variable
+Number of Entries Multi Reason,55,27,_,variable
+Thailand address1,321,640,xxx/yy Moo z T. San Pu Loei,stable
+Thailand address2,321,618,A. Doi Saket J.Chiang Mai,stable
+Guarantor Thailand,420,574,Thai person,stable
+Guarantor Thailand Phone,354,552,+66 8765 4321,stable
+Guarantor Lao,420,508,Funky Monkey Hostel,variable
+Guarantor Lao Phone,354,486,+82 10-1235-6789,variable
