@@ -20,3 +20,17 @@ Tel Lao Residence,90,376,+82 10-1235-6789,variable
 Address home country1,222,354,Unit 99,stable
 Address home country2,50,333,999 Some Road Some Suburb,stable
 Address home country3,50,317,Some State Some Country 99999,stable
+Phone at home,85,298,_613 1234 5678,stable
+Email,205,298,qwertyasdf@gamail.com,stable
+Accompanying children1,50,254,No,stable
+Accompanying children2,50,235,children,stable
+Date of arrival Thailand,230,216,01 Jan 2000,variable
+Travelling by,160,194,Air Bus Rail,variable
+Duration of stay,204,172,60 days,stable
+Tourist,55,116,X,stable
+Purpose of visit1,185,99,Holiday,stable
+Purpose of visit2,55,82,_,variable
+Purpose of visit3,55,64,_,variable
+Number of Entries Single,201,47,X,stable
+Number of Entries Multiple,201,27,X,variable
+Number of Entries Multi Reason,55,27,X,variable

@@ -91,3 +91,59 @@ newpath
 newpath
 50 317 moveto
 (Some State Some Country 99999) show
+%%Phone at home
+newpath
+85 298 moveto
+( 613 1234 5678) show
+%%Email
+newpath
+205 298 moveto
+(qwertyasdf@gamail.com) show
+%%Accompanying children1
+newpath
+50 254 moveto
+(No) show
+%%Accompanying children2
+newpath
+50 235 moveto
+(children) show
+%%Date of arrival Thailand
+newpath
+230 216 moveto
+(01 Jan 2000) show
+%%Travelling by
+newpath
+160 194 moveto
+(Air Bus Rail) show
+%%Duration of stay
+newpath
+204 172 moveto
+(60 days) show
+%%Tourist
+newpath
+55 116 moveto
+(X) show
+%%Purpose of visit1
+newpath
+185 99 moveto
+(Holiday) show
+%%Purpose of visit2
+newpath
+55 82 moveto
+( ) show
+%%Purpose of visit3
+newpath
+55 64 moveto
+( ) show
+%%Number of Entries Single
+newpath
+201 47 moveto
+(X) show
+%%Number of Entries Multiple
+newpath
+201 27 moveto
+(X) show
+%%Number of Entries Multi Reason
+newpath
+55 27 moveto
+(X) show
