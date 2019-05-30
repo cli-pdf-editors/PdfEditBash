@@ -3,171 +3,180 @@
 %% Scale the font
 8 scalefont
 setfont
-%%Mr
+%Mr
 newpath
 50 706 moveto
 (X) show
-%%Mrs
+%Mrs
 newpath
 85 706 moveto
 (X) show
-%%Miss
+%Miss
 newpath
 120 706 moveto
 (X) show
-%%First Name
+%First Name
 newpath
 200 707 moveto
 (FIRSTNAME) show
-%%Middle Name
+%Middle Name
 newpath
 288 707 moveto
 (MIDDLENAME) show
-%%Family Name
+%Family Name
 newpath
 400 707 moveto
 (FAMILYNAME) show
-%%Nationality
+%Nationality
 newpath
 130 662 moveto
 (Nationality) show
-%%Nationality at birth
+%Nationality at birth
 newpath
 175 640 moveto
 (Nationality at birth) show
-%%Place of birth
+%Place of birth
 newpath
 155 618 moveto
 (Where born) show
-%%Marital status
+%Marital status
 newpath
 175 596 moveto
 (Separated) show
-%%Date of birth
+%Date of birth
 newpath
 130 574 moveto
 (01 Jan 1970) show
-%%Passport/Travel Doc
+%Passport/Travel Doc
 newpath
 207 552 moveto
 (PN12345678) show
-%%Place of Issue
+%Place of Issue
 newpath
 135 530 moveto
 (Where issued) show
-%%Date of Issue
+%Date of Issue
 newpath
 145 508 moveto
 (01 Jan 1970) show
-%%Date of Expiry
+%Date of Expiry
 newpath
 160 486 moveto
 (01 Jan 2000) show
-%%Occuptaion
+%Occuptaion
 newpath
 50 442 moveto
 (Retired) show
-%%Address in Lao1
+%Address in Lao1
 newpath
 195 421 moveto
 (Funky Monkey Hostel) show
-%%Address in Lao2
+%Address in Lao2
 newpath
 50 398 moveto
 (Rue Francois Ngin Chanthabouly District Fa Ngum Road 856 Vientiane) show
-%%Tel Lao Residence
+%Tel Lao Residence
 newpath
 90 376 moveto
 (+82 10-1235-6789) show
-%%Address home country1
+%Address home country1
 newpath
 222 354 moveto
 (Unit 99) show
-%%Address home country2
+%Address home country2
 newpath
 50 333 moveto
 (999 Some Road Some Suburb) show
-%%Address home country3
+%Address home country3
 newpath
 50 317 moveto
 (Some State Some Country 99999) show
-%%Phone at home
+%Phone at home
 newpath
 85 298 moveto
 ( 613 1234 5678) show
-%%Email
+%Email
 newpath
 205 298 moveto
 (qwertyasdf@gamail.com) show
-%%Accompanying children1
+%Accompanying children1
 newpath
 50 254 moveto
 (No) show
-%%Accompanying children2
+%Accompanying children2
 newpath
 50 235 moveto
 (children) show
-%%Date of arrival Thailand
+%Date of arrival Thailand
 newpath
 230 216 moveto
 (01 Jan 2000) show
-%%Travelling by
+%Travelling by
 newpath
 160 194 moveto
 (Air Bus Rail) show
-%%Duration of stay
+%Duration of stay
 newpath
 204 172 moveto
 (60 days) show
-%%Tourist
+%Tourist
 newpath
 55 116 moveto
 (X) show
-%%Purpose of visit1
+%Purpose of visit1
 newpath
 185 99 moveto
 (Holiday) show
-%%Purpose of visit2
+%Purpose of visit2
 newpath
 55 82 moveto
 ( ) show
-%%Purpose of visit3
+%Purpose of visit3
 newpath
 55 64 moveto
 ( ) show
-%%Number of Entries Single
+%Number of Entries Single
 newpath
 201 47 moveto
 (X) show
-%%Number of Entries Multiple
+%Number of Entries Multiple
 newpath
 201 27 moveto
 ( ) show
-%%Number of Entries Multi Reason
+%Number of Entries Multi Reason
 newpath
 55 27 moveto
 ( ) show
-%%Thailand address1
+%Thailand address1
 newpath
 321 640 moveto
 (xxx/yy Moo z T. San Pu Loei) show
-%%Thailand address2
+%Thailand address2
 newpath
 321 618 moveto
 (A. Doi Saket J.Chiang Mai) show
-%%Guarantor Thailand
+%Guarantor Thailand
 newpath
 420 574 moveto
 (Thai person) show
-%%Guarantor Thailand Phone
+%Guarantor Thailand Phone
 newpath
 354 552 moveto
 (+66 8765 4321) show
-%%Guarantor Lao
+%Guarantor Lao
 newpath
 420 508 moveto
 (Funky Monkey Hostel) show
-%%Guarantor Lao Phone
+%Guarantor Lao Phone
 newpath
 354 486 moveto
 (+82 10-1235-6789) show
+% paint a white box over the top of a pink water mark.
+newpath
+45 830 moveto
+245 830 lineto
+245 790 lineto
+45 790 lineto
+45 830 lineto
+1 setgray
+fill
