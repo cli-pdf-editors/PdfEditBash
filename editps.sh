@@ -64,7 +64,7 @@ do
   do
     echo "$line"
     comment=$(echo "$line" | cut -d',' -f1)
-    comment="%%""$comment"  # postscript comment
+    comment="%""$comment"  # postscript comment
     echo "$comment" >> mid
     echo "newpath" >> mid
     X=$(echo "$line" | cut -d',' -f2)
@@ -77,6 +77,10 @@ do
     echo "$showline" >> mid
     # the 5th field 'selector', has no role here.
   done < "$edata"
+
+  # there may be some special editing needed.
+  if [[ -f specialedit.sh ]];then bash specialedit.sh mid; fi
+  
   # put the postscript file together again
   cat top > "$edps"
   cat mid >> "$edps"

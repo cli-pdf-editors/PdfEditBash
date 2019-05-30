@@ -42,7 +42,8 @@ fracinches()
 }
 centimeters()
 {
-  local p=$(echo $1 / 2.54 \* 72 | bc -l)
+  local p=$1
+  p=$(echo $p / 2.54 \* 72 | bc -l)
   # truncate the returned value at the decimal point.
   points=$(echo $p | cut -d'.' -f1)
   optflag=1
@@ -93,5 +94,8 @@ done
 if [[ "$optflag" -ne 1 ]]; then
   centimeters "$1"
 fi
+
+# the scaling between the actual printed page and our measured location
+# causes errors. This kludge is an attempt to rectify.
 
 echo "$points"
