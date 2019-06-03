@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# datanames.sh - script to name required data files.
+# pe_datanames.sh - script to name required data files.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-if [[ ! -f toedit.lst ]];then echo run initform.sh; fi
+if [[ ! -f toedit.lst ]];then echo run pe_initform.sh; fi
 while read -r line
 do
   dfn=$(basename "$line" pdf)

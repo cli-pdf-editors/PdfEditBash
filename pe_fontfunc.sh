@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# fontfunc.sh - bash function to write font data to postscript file.
+# pe_fontfunc.sh - bash function to write font data to postscript file.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 #

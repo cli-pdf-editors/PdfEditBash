@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# initform.sh - script to set up the parameters to edit a pdf form.
+# pe_initform.sh - script to set up the parameters to edit a pdf form.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -48,12 +48,12 @@ rm burst.lst
 # operation. It will be reborn at edit time so kill it.
 if [[ -f doc_data.txt ]];then rm doc_data.txt; fi
 
-# I want a copy of fontfunc.sh from wherever this script is running.
+# I want a copy of pe_fontfunc.sh from wherever this script is running.
 rp=$(realpath "$0")
 dn=$(dirname "$rp")
-cpfr="$dn"/fontfunc.sh
+cpfr="$dn"/pe_fontfunc.sh
 cp "$cpfr" .
-echo Edit \'fontfunc.sh\' to change font name and/or size.
+echo Edit \'pe_fontfunc.sh\' to change font name and/or size.
 
 # last job is to record the input pdf file name.
 echo "$infn" > pdfname

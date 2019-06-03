@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# calcpoints.sh - script to calculate points distance from other units.
+# pe_calcpoints.sh - script to calculate points distance from other
+#                    units.
 #
 # Copyright 2018 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -64,7 +65,7 @@ points()
 }
 # write actual usage
 usage () {
-  echo "calcpoints.sh [option] X Y"
+  echo "pe_calcpoints.sh [option] X Y"
   echo "Where X and Y is the measured distance to a location on the form."
   echo "Choose the units input to convert to points."
   echo "-h - prints this and exits."

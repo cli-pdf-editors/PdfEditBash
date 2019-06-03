@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# editps.sh - script to edit a postscript file.
+# pe_editps.sh - script to edit a postscript file.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -31,12 +31,12 @@ splitps()
   head -n"$split" "$psfn" > top
   tail -n"$lower" "$psfn" > btm
 }
-# the path ./fontfunc.sh forces this to load the script from where the
+# the path ./pe_fontfunc.sh forces this to load the script from where the
 # script is invoked from, not from where running script resides.
-source ./fontfunc.sh  # writes the font spec to a postscript file.
+source ./pe_fontfunc.sh  # writes the font spec to a postscript file.
 
 if [[ ! -f pdfname ]];then
-  echo Run initform.sh with a copy of your pdf form in this directory.
+  echo Run pe_initform.sh with a copy of your pdf form in this directory.
   exit 1
 fi
 
