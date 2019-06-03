@@ -31,12 +31,16 @@ splitps()
   head -n"$split" "$psfn" > top
   tail -n"$lower" "$psfn" > btm
 }
-source fontfunc.sh  # writes the font spec to a postscript file.
+# the path ./fontfunc.sh forces this to load the script from where the
+# script is invoked from, not from where running script resides.
+source ./fontfunc.sh  # writes the font spec to a postscript file.
 
 if [[ ! -f pdfname ]];then
   echo Run initform.sh with a copy of your pdf form in this directory.
   exit 1
 fi
+
+echo this is running "$0"
 infn=$(cat pdfname)
 bsfn=$(basename "$infn" .pdf)
 opfn="$bsfn"Filled.pdf
