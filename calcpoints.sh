@@ -18,12 +18,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-decinches()
+centimeters()
 {
-  local p=$(echo $1 \* 72 | bc -l)
+  local len=$1
+  local m=$2
+  local c=$3
+  local p=$(echo $len \* $m + $c |bc -l)
+  p=$(echo $p + 0.5 |bc -l)
   # truncate the returned value at the decimal point.
   points=$(echo $p | cut -d'.' -f1)
   optflag=1
+}
+decinches()
+{ # all actual calculation happens as cm, convert input inches
+  local p=$(echo "$1" \* 2.54 |bc -l)
+  centimeters "$p" "$2" "$3"
 }
 fracinches()
 {
@@ -35,18 +44,9 @@ fracinches()
   local denom=$(echo "$fract" | cut -d'/' -f2)
   local calc="$whole"" + ""(""$numer"" / ""$denom"")"
   local decin=$(echo "$calc" | bc -l)
-  local p=$(echo $decin \* 72 | bc -l)
-  # truncate the returned value at the decimal point.
-  points=$(echo $p | cut -d'.' -f1)
-  optflag=1
-}
-centimeters()
-{
-  local p=$1
-  p=$(echo $p / 2.54 \* 72 | bc -l)
-  # truncate the returned value at the decimal point.
-  points=$(echo $p | cut -d'.' -f1)
-  optflag=1
+  # do the actual calculation as centimeters
+  local p=$(echo $decin \* 2.54 |bc -l)
+  centimeters "$p" "$2" "$3"
 }
 millimeters()
 {
@@ -62,16 +62,32 @@ points()
   points=$(echo $p | cut -d'.' -f1)
   optflag=1
 }
-
 # write actual usage
-usage () { echo "Choose the units input to convert to points"
+usage () {
+  echo "calcpoints.sh [option] X Y"
+  echo "Where X and Y is the measured distance to a location on the form."
+  echo "Choose the units input to convert to points."
   echo "-h - prints this and exits."
   echo "-i - Input units to be eg 5.375 inches"
   echo "-f - Input units to be eg 5+3/8 inches"
   echo "-c - Input units to be eg 12.4 cm"
   echo "-m - Input units to be eg 124 mm"
   echo "-p - Input units to be eg 432 points"
-  }
+  echo "THe default input unit is centimeters presently."
+}
+
+# Parameters to correct for scaling errors that happen when we just use
+# the bald 1" = 72 points when measuring positions of objects on the
+# form. These apply to centimeter measurements.
+
+# X distances - left of form to placement position
+mx=31.05960264900662251655
+cx=-33.62582781456953642377
+# Y distances - bottom of form to placement position.
+my=31.01321585903083700440
+cy=-35.44493392070484581490
+
+
 
 # options string
 options=':ifcmph'
@@ -80,8 +96,18 @@ optflag=0
 while getopts $options option
 do
 	case $option in
-		i  ) shift;decinches "$1";;
-		f  ) shift;fracinches "$1";;
+		i  ) shift;decinches "$1" "$mx" "$cx"
+         echo -n "$points"" "
+         decinches "$2" "$my" "$cy"
+         echo "$points"
+         exit 0
+    ;;
+		f  ) shift;fracinches "$1" "$mx" "$cx"
+          echo -n "$points"" "
+          fracinches "$2" "$my" "$cy"
+          echo "$points"
+          exit 0
+    ;;
 		c  ) shift;centimeters "$1";;
 		m  ) shift;millimeters "$1";;
 		p  ) shift;points "$1";;
@@ -91,11 +117,12 @@ do
 		*  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
 	esac
 done
-if [[ "$optflag" -ne 1 ]]; then
-  centimeters "$1"
-fi
 
-# the scaling between the actual printed page and our measured location
-# causes errors. This kludge is an attempt to rectify.
-
+# This is the default function when no option is selected.
+# Change the function name if another default is wanted.
+centimeters "$1" "$mx" "$cx"
+echo -n "$points"" "
+centimeters "$2" "$my" "$cy"
 echo "$points"
+exit 0
+
