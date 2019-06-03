@@ -23,7 +23,7 @@
 exp=$(realpath "$0")
 exp=$(dirname "$exp")
 opfn="$1"
-# reads user data for 4 variables and emits a comma separated list.
+# reads user data for 5 variables and emits a comma separated list.
 while :
 do
   read -e -p "Field name on form (comment entry): " comment
@@ -32,8 +32,6 @@ do
   read -e -p "Location from bottom: " Y
   read -e -p "Default text: " text
   read -e -p "Selector: " -i "stable variable" selector
-  X=$("$exp"/calcpoints.sh "$X") # input units to points
-  Y=$("$exp"/calcpoints.sh "$Y") # input units to points
   line="$comment","$X","$Y","$text","$selector"
   echo "$line"
   echo "$line" >> "$opfn"
