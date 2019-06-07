@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# untiled.sh - script to interactively update data files used to
-#               decribe edits to a postscript file.
+# pe_updatetext.sh - script to update data files used to
+#                   describe edits to a postscript file.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -77,8 +77,8 @@ fi
 #
 #   done < data_file
 #
-#   What does work is a purpose built script which actually is
-#   similar to unrolling a loop anyway.
+#   What does work is a purpose built interactive script.
+#
 #   So what follows is an attempt to do just that.
 ########################################################################
 
@@ -102,23 +102,55 @@ ENDheader
 
 # Now, generate the main part of the script
 
+# provide some instructions for the user.
+cat << ENDinst >> ./"$sfn"
+dfn="\$1"
+echo This program will output a prompt, text followed by ':', then the \
+text that exists. You may change, delete and replace this text any way \
+you like.
+echo To retain any existing text, just hit 'Enter' without altering \ anything.
+echo If there is any field that you want to be empty just replace the \
+field content with an underscore \('_'\).
+read -e -p 'Enter to continue:' nothing
+echo
+ENDinst
+
 # put the data lines in a temporary file
-rm ./shit.dat
-for i in "$lines"
+tfn=tfn$$
+rm ./tfn*
+cat << END1 > ./"$tfn"
+$lines
+END1
+# these data lines may have embedded spaces so wrap them with '"'.
+sed -i "s/.*/\"&\"/" ./"$tfn"
+# had difficulty removing an eol escape from last line so:
+lc=$(wc -l ./"$tfn")
+lc=$(echo "$lc" |cut -d' ' -f1)
+let lc--
+lastline=$(tail -n1 ./"$tfn")
+lines=$(head -n"$lc" ./"$tfn")
+# process data lines in a for loop.
+echo "for line in" > ./"$tfn"  # file truncated and rewritten
+cat << END2 >> ./"$tfn"
+$lines
+END2
+# need to escape the newlines in the data line block.
+sed -i 's!$! \\!' ./"$tfn"
+# the last line eol is not escaped
+echo "$lastline" >> ./"$tfn"
+# actual processing for the loop
+cat << END3 >> ./"$tfn"
 do
-echo "$i" >> ./shit.dat
+  split "\$line"
+  read -e -p "\$comment"": " -i "\$text" textin
+  if [[ "\$text" != "\$textin" ]];then
+    sed -i "\$lno s!\$text!\$textin!" "\$dfn"
+  fi
 done
-# wrap the data lines
-sed -i "s/.*/split \"&\"/" ./shit.dat
-# put a 'junk' line after every existing line - pattern is 'aaa'
-sed -i "s/$/\\naa\\nbb\\ncc\\nddd/" ./shit.dat
-
-# replace the junk patterns aa..ddd with commands
-sed -i "s/aa/read -e -p \"\$comment\"\" \" -i \"\$text\" textin/" ./shit.dat
-sed -i "s/bb/echo textin is: \"\$textin\"/" ./shit.dat
-sed -i "s/cc/echo \$y/" ./shit.dat
-sed -i "s/ddd/echo \$text/" ./shit.dat
-
+END3
 
 # append the temp file to the script
-cat ./shit.dat >> ./"$sfn"
+cat ./"$tfn" >> ./"$sfn"
+
+# so now run it
+./"$sfn"
