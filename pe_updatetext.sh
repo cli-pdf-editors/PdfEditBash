@@ -19,6 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
+split()
+{ # truncated split(), only want the line number.
+  lno=$(echo "$1" |cut -d':' -f1)
+}
 
 # set defaults
 seltext=
@@ -54,5 +58,67 @@ do
 	esac
 done
 
-echo $1 $2
-echo $seltext
+inf="$1"
+if [[ ! -z "$seltext" ]]; then
+  # get only lines containing '$selext' at field 5, ie before '\n'
+  lines=$(grep -n "$seltext"'$' "$inf")
+else
+  # get all lines but with identical output formatting as above.
+  lines=$(grep -n . "$inf")
+fi
+
+########################################################################
+#     Stuff that can not be done in Bash
+#   Loop (any kind while, for etc)
+#   do
+#     init some variables
+#
+#     run some interactive script for user input
+#
+#   done < data_file
+#
+#   What does work is a purpose built script which actually is
+#   similar to unrolling a loop anyway.
+#   So what follows is an attempt to do just that.
+########################################################################
+
+# set up the script header
+sfn=runupdate.sh
+cat << ENDheader > ./"$sfn"
+#!/bin/bash
+split() # splits a line into variables
+{
+  local lline="\$1"
+  lno=\$(echo "\$lline" | cut -d':' -f1) # grep -n gave us \$lline
+  local dline=\$(echo "\$lline" | cut -d':' -f2) # all of the rest
+  comment=\$(echo "\$dline" |cut -d"," -f1)
+  x=\$(echo "\$dline" |cut -d"," -f2) # x, points from left of form.
+  y=\$(echo "\$dline" |cut -d"," -f3) # y, points from bottom of form.
+  text=\$(echo "\$dline" |cut -d"," -f4) # text to print on form.
+  selector=\$(echo "\$dline" |cut -d"," -f5) # word to choose line.
+}
+
+ENDheader
+
+# Now, generate the main part of the script
+
+# put the data lines in a temporary file
+rm ./shit.dat
+for i in "$lines"
+do
+echo "$i" >> ./shit.dat
+done
+# wrap the data lines
+sed -i "s/.*/split \"&\"/" ./shit.dat
+# put a 'junk' line after every existing line - pattern is 'aaa'
+sed -i "s/$/\\naa\\nbb\\ncc\\nddd/" ./shit.dat
+
+# replace the junk patterns aa..ddd with commands
+sed -i "s/aa/read -e -p \"\$comment\"\" \" -i \"\$text\" textin/" ./shit.dat
+sed -i "s/bb/echo textin is: \"\$textin\"/" ./shit.dat
+sed -i "s/cc/echo \$y/" ./shit.dat
+sed -i "s/ddd/echo \$text/" ./shit.dat
+
+
+# append the temp file to the script
+cat ./shit.dat >> ./"$sfn"
