@@ -31,8 +31,10 @@ splitps()
   head -n"$split" "$psfn" > top
   tail -n"$lower" "$psfn" > btm
 }
-# the path ./pe_fontfunc.sh forces this to load the script from where the
-# script is invoked from, not from where running script resides.
+source pe_sanitisedata.sh # load from where script is installed.
+
+# the path ./pe_fontfunc.sh forces this to load the script from where
+# the script is invoked from, not from where running script resides.
 source ./pe_fontfunc.sh  # writes the font spec to a postscript file.
 
 if [[ ! -f pdfname ]];then
@@ -49,20 +51,20 @@ pdftk "$inputfile" burst output "$basename"_%d.pdf
 ls *.pdf | grep -v "$inputfile" | sort > burst.lst
 # burst.lst is for when we rebuild the output pdf
 # toedit.lst lists what pdf pages get edited
-while IFS= read -r edpdf
+while IFS= read -r pdftoedit
 do
-  edps=$(basename "$edpdf" .pdf)
-  edps="$edps".ps
-  pdftops "$edpdf" "$edps"
+  postscripttoedit=$(basename "$pdftoedit" .pdf)
+  postscripttoedit="$postscripttoedit".ps
+  pdftops "$pdftoedit" "$postscripttoedit"
   # split the postscript file at the line 'showpage'
-  splitps "$edps"
+  splitps "$postscripttoedit"
   # Build up the postscript statements in a file called mid
   if [[ -f mid ]];then rm mid; fi
   touch mid
   setfont mid
   # here will be the loop reading the data file describing the edits.
-  edata=$(basename "$edpdf" .pdf)
-  edata="$edata".dat
+  editdata=$(basename "$pdftoedit" .pdf)
+  editdata="$editdata".dat
   while IFS= read -r line
   do
     echo "$line"
@@ -79,16 +81,16 @@ do
     showline=$(printf "(%s) show" "$text")
     echo "$showline" >> mid
     # the 5th field 'selector', has no role here.
-  done < "$edata"
+  done < "$editdata"
 
   # there may be some special editing needed.
   if [[ -f specialedit.sh ]];then bash specialedit.sh mid; fi
   
   # put the postscript file together again
-  cat top > "$edps"
-  cat mid >> "$edps"
-  cat btm >> "$edps"
-  ps2pdf "$edps"
+  cat top > "$postscripttoedit"
+  cat mid >> "$postscripttoedit"
+  cat btm >> "$postscripttoedit"
+  ps2pdf "$postscripttoedit"
 done < toedit.lst
 
 # assemble the output pdf
