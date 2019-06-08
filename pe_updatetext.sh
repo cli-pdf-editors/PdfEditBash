@@ -58,13 +58,13 @@ do
 	esac
 done
 
-inf="$1"
+infile="$1"
 if [[ ! -z "$seltext" ]]; then
   # get only lines containing '$selext' at field 5, ie before '\n'
-  lines=$(grep -n "$seltext"'$' "$inf")
+  lines=$(grep -n "$seltext"'$' "$infile")
 else
   # get all lines but with identical output formatting as above.
-  lines=$(grep -n . "$inf")
+  lines=$(grep -n . "$infile")
 fi
 
 ########################################################################
@@ -83,8 +83,8 @@ fi
 ########################################################################
 
 # set up the script header
-sfn=runupdate.sh
-cat << ENDheader > ./"$sfn"
+scriptfile=runupdate.sh
+cat << ENDheader > ./"$scriptfile"
 #!/bin/bash
 split() # splits a line into variables
 {
@@ -103,8 +103,9 @@ ENDheader
 # Now, generate the main part of the script
 
 # provide some instructions for the user.
-cat << ENDinst >> ./"$sfn"
+cat << ENDinst >> ./"$scriptfile"
 dfn="\$1"
+echo "\$dfn"
 echo This program will output a prompt, text followed by ':', then the \
 text that exists. You may change, delete and replace this text any way \
 you like.
@@ -116,30 +117,30 @@ echo
 ENDinst
 
 # put the data lines in a temporary file
-tfn=tfn$$
-rm ./tfn*
-cat << END1 > ./"$tfn"
+tempfile=tempfile$$
+rm ./tempfile*
+cat << END1 > ./"$tempfile"
 $lines
 END1
 # these data lines may have embedded spaces so wrap them with '"'.
-sed -i "s/.*/\"&\"/" ./"$tfn"
+sed -i "s/.*/\"&\"/" ./"$tempfile"
 # had difficulty removing an eol escape from last line so:
-lc=$(wc -l ./"$tfn")
+lc=$(wc -l ./"$tempfile")
 lc=$(echo "$lc" |cut -d' ' -f1)
 let lc--
-lastline=$(tail -n1 ./"$tfn")
-lines=$(head -n"$lc" ./"$tfn")
+lastline=$(tail -n1 ./"$tempfile")
+lines=$(head -n"$lc" ./"$tempfile")
 # process data lines in a for loop.
-echo "for line in" > ./"$tfn"  # file truncated and rewritten
-cat << END2 >> ./"$tfn"
+echo "for line in" > ./"$tempfile"  # file truncated and rewritten
+cat << END2 >> ./"$tempfile"
 $lines
 END2
 # need to escape the newlines in the data line block.
-sed -i 's!$! \\!' ./"$tfn"
+sed -i 's!$! \\!' ./"$tempfile"
 # the last line eol is not escaped
-echo "$lastline" >> ./"$tfn"
+echo "$lastline" >> ./"$tempfile"
 # actual processing for the loop
-cat << END3 >> ./"$tfn"
+cat << END3 >> ./"$tempfile"
 do
   split "\$line"
   read -e -p "\$comment"": " -i "\$text" textin
@@ -150,7 +151,7 @@ done
 END3
 
 # append the temp file to the script
-cat ./"$tfn" >> ./"$sfn"
-
+cat ./"$tempfile" >> ./"$scriptfile"
+echo 
 # so now run it
-./"$sfn"
+./"$scriptfile" ./"$infile" 

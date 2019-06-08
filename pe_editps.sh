@@ -40,14 +40,13 @@ if [[ ! -f pdfname ]];then
   exit 1
 fi
 
-echo this is running "$0"
-infn=$(cat pdfname)
-bsfn=$(basename "$infn" .pdf)
-opfn="$bsfn"Filled.pdf
-if [[ -f "$opfn" ]];then rm "$opfn"; fi
+inputfile=$(cat pdfname)
+basename=$(basename "$inputfile" .pdf)
+outputfile="$basename"Filled.pdf
+if [[ -f "$outputfile" ]];then rm "$outputfile"; fi
 # burst the input pdf into single pages.
-pdftk "$infn" burst output "$bsfn"_%d.pdf 
-ls *.pdf | grep -v "$infn" | sort > burst.lst
+pdftk "$inputfile" burst output "$basename"_%d.pdf 
+ls *.pdf | grep -v "$inputfile" | sort > burst.lst
 # burst.lst is for when we rebuild the output pdf
 # toedit.lst lists what pdf pages get edited
 while IFS= read -r edpdf
@@ -94,7 +93,7 @@ done < toedit.lst
 
 # assemble the output pdf
 inlist=$(cat burst.lst |tr '\n' ' ')
-command=$(printf "pdftk %s cat output %s" "$inlist" "$opfn")
+command=$(printf "pdftk %s cat output %s" "$inlist" "$outputfile")
 echo "$command"
 eval "$command"
 exit 0
