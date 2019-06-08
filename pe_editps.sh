@@ -65,6 +65,7 @@ do
   # here will be the loop reading the data file describing the edits.
   editdata=$(basename "$pdftoedit" .pdf)
   editdata="$editdata".dat
+  sanitise "$editdata"
   while IFS= read -r line
   do
     echo "$line"
