@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_editps.sh - script to edit a postscript file.
 #
@@ -37,7 +37,7 @@ source pe_sanitisedata.sh # load from where script is installed.
 # the script is invoked from, not from where running script resides.
 source ./pe_fontfunc.sh  # writes the font spec to a postscript file.
 
-if [[ ! -f pdfname ]];then
+if [[ ! -f ./configs.lst ]];then
   echo Run pe_initform.sh with a copy of your pdf form in this directory.
   exit 1
 fi
