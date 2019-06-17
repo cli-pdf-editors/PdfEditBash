@@ -21,7 +21,7 @@
 #
 scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
 source "$scriptfrom"/pe_functions.sh
-mk_tfn addfd
+mk_tfn edfd
 temp="$tfn"
 getconfig toedit
 echo "$prm" > "$temp"
@@ -29,7 +29,7 @@ filelc "$temp"
 numpages="$lc"
 rm $temp
 if [[ -z "$1" ]];then
-  read -p "Which page do you want to edit" -e page
+  read -p "Which page do you want to edit " -e page
 else
   page="$1"
 fi
@@ -37,3 +37,8 @@ if [[ "$page" -lt 1 ]] || [[ "$page" -gt "$numpages" ]];then
   echo "Page number out of range: $page"
   exit 1
 fi
+getconfig editor
+editor="$prm"
+getconfig toedit "$page"
+editfile=$(basename "$prm" pdf)dat
+"$editor" "$editfile"
