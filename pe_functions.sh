@@ -24,7 +24,6 @@ getconfig()
     Echo "configuration file config.lst does not exist."
     exit 1
   fi
-  echo first param is "$1"
   if [[ -z "$1" ]];then
     echo "No parameter supplied to funtion getconfig, quitting."
     exit 1
@@ -40,4 +39,10 @@ getconfig()
     return
   fi
   prm=$(echo "$ret" |cut -d: -f2)
+}
+
+mk_tfn()  # make a temporary filename.
+{
+  local prefix="$1"
+  tfn="$prefix"$(date +"%Y-%m-%d-%H:%M:%S")
 }
