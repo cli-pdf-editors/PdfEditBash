@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_datanames.sh - script to name required data files.
 #

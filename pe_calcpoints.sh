@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_calcpoints.sh - script to calculate points distance from other
 #                    units.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_sanitisedata.sh - script to carry a function sanitise()
 #

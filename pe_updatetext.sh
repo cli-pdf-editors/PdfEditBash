@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_updatetext.sh - script to update data files used to
 #                   describe edits to a postscript file.
