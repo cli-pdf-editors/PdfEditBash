@@ -44,5 +44,13 @@ getconfig()
 mk_tfn()  # make a temporary filename.
 {
   local prefix="$1"
-  tfn="$prefix"$(date +"%Y-%m-%d-%H:%M:%S")
+  tfn="$prefix"$(date +"%Y-%m-%d-%H-%M-%S")
+}
+
+getpageno()
+{ # extract the page number from *_n.dat
+  local df="$1"
+  df=$(basename "$df" .dat)
+  local pn=$(echo "$df" |cut -d_ -f2)
+  pageno="Page $pn"
 }
