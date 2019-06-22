@@ -38,7 +38,7 @@ echo "$inputfilename"
 echo name:"$inputfilename" > ./config.lst
 barefilename=$(basename "$inputfilename" .pdf)
 outputfilename="$barefilename"Filled".pdf"
-pdftk "$inputfilename" burst output "$barefilename"_%d.pdf
+pdftk "$inputfilename" burst output "$barefilename"_%0.3d.pdf
 
 # list burst pages without the input pdf.
 # want a list of the burst pages for when the pdf pages are concatented
@@ -64,7 +64,7 @@ echo "Now I need to get some more information about this form."
 filelc burst.lst
 pages="$lc"
 echo It has "$pages" pages.
-for page in {1..100} # Only numeric literals allowed, no variables.
+for page in {1..1000} # Only numeric literals allowed, no variables.
 do
   read -e -p "Is page $page to be edited? " -i "YN" answer
   if [[ "$answer" = "Y" ]];then
