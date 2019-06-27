@@ -31,26 +31,65 @@ splitps()
   head -n"$split" "$psfn" > top
   tail -n"$lower" "$psfn" > btm
 }
-source pe_sanitisedata.sh # load from where script is installed.
 
-# the path ./pe_fontfunc.sh forces this to load the script from where
+# handle options
+# set defaults
+runspecial=1
+runviewer=0
+
+# write actual usage
+usage () {
+  cat << ENDhelp
+  pe_editps.sh [option]
+  OPTIONS
+  -h shows this help then quits.
+  -n stops any existing existing specialedit script in the forms \
+data directory
+     from running. Has no effect if there is no such script.
+  -s Shows the completed form in the user's configured PDF viewer.
+     Usually used only for the first edit run of a form because the PDF
+     viewer is aware of any further changes.
+ENDhelp
+}
+# options string
+options=':snh'
+# the leading ':' in options string is required for the errors cases.
+
+while getopts $options option
+do
+	case $option in
+		s  ) runviewer=1;;
+		n  ) runspecial=0;;
+		h  ) usage; exit;;
+		\? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+		:  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+		*  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
+	esac
+done
+
+
+
+scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
+source "$scriptfrom"/pe_sanitisedata.sh
+
+# the path pe_fontfunc.sh forces this to load the script from where
 # the script is invoked from, not from where running script resides.
-source ./pe_fontfunc.sh  # writes the font spec to a postscript file.
+source pe_fontfunc.sh  # writes the font spec to a postscript file.
+source pe_functions.sh
 
-if [[ ! -f ./configs.lst ]];then
+if [[ ! -f config.lst ]];then
   echo Run pe_initform.sh with a copy of your pdf form in this directory.
   exit 1
 fi
-
-inputfile=$(cat pdfname)
+getconfig "name"
+inputfile="$prm"
+echo "$inputfile"
 basename=$(basename "$inputfile" .pdf)
 outputfile="$basename"Filled.pdf
 if [[ -f "$outputfile" ]];then rm "$outputfile"; fi
-# burst the input pdf into single pages.
-pdftk "$inputfile" burst output "$basename"_%d.pdf 
-ls *.pdf | grep -v "$inputfile" | sort > burst.lst
-# burst.lst is for when we rebuild the output pdf
-# toedit.lst lists what pdf pages get edited
+# generate the file toedit.lst from config.lst.
+grep '^toedit' config.lst > toedit.lst
+sed -i 's/toedit://' toedit.lst
 while IFS= read -r pdftoedit
 do
   postscripttoedit=$(basename "$pdftoedit" .pdf)
@@ -66,7 +105,7 @@ do
   editdata=$(basename "$pdftoedit" .pdf)
   editdata="$editdata".dat
   sanitise "$editdata"
-  while IFS= read -r line
+  while IFS= read -u3 -r line
   do
     echo "$line"
     comment=$(echo "$line" | cut -d',' -f1)
@@ -82,11 +121,13 @@ do
     showline=$(printf "(%s) show" "$text")
     echo "$showline" >> mid
     # the 5th field 'selector', has no role here.
-  done < "$editdata"
+  done 3< "$editdata"
 
   # there may be some special editing needed.
-  if [[ -f specialedit.sh ]];then bash specialedit.sh mid; fi
-  
+  if [[ runspecial -eq 1 ]]; then
+    if [[ -f specialedit.sh ]];then bash specialedit.sh mid; fi
+  fi
+
   # put the postscript file together again
   cat top > "$postscripttoedit"
   cat mid >> "$postscripttoedit"
@@ -94,17 +135,16 @@ do
   ps2pdf "$postscripttoedit"
 done < toedit.lst
 
-# assemble the output pdf
-inlist=$(cat burst.lst |tr '\n' ' ')
-command=$(printf "pdftk %s cat output %s" "$inlist" "$outputfile")
-echo "$command"
-eval "$command"
-exit 0
-# clean up work files
-while IFS= read -r line
-do
-  rm "$line"
-done < burst.lst
-rm burst.lst
+# Use shell glob to assemble the output.
+backfile=$(basename "$inputfile" pdf)bak
+mv "$inputfile" "$backfile"   # kludge in, stops my input file catted.
+pages=$(head -1 toedit.lst |cut -d_ -f1)
+pages=$pages_*.pdf
+pdftk $pages cat output "$outputfile"
+mv "$backfile" "$inputfile"   # kludge out
+rm toedit.lst
 
-exit 0
+if [[ runviewer -eq 1 ]]; then
+  viewer=$(grep 'viewer:' config.lst |cut -d: -f2)
+  "$viewer" "$outputfile"
+fi
