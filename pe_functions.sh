@@ -41,16 +41,17 @@ getconfig()
   prm=$(echo "$ret" |cut -d: -f2)
 }
 
-mk_tfn()  # make a temporary filename.
-{
-  local prefix="$1"
-  tfn="$prefix"$(date +"%Y-%m-%d-%H-%M-%S")
-}
-
 getpageno()
-{ # extract the page number from *_n.dat
-  local df="$1"
-  df=$(basename "$df" .dat)
-  local pn=$(echo "$df" |cut -d_ -f2)
-  pageno="Page $pn"
+{ # extract the page number from the lists of PDF 1 page files.
+  local inf=$(basename "$1" dat)pdf
+  echo "$inf"
+  # list of burst pages
+  local burst="burst"$(date +"%Y-%m-%d-%H-%M-%S")
+  grep 'burst' config.lst > "$burst"
+  local list="list"$(date +"%Y-%m-%d-%H-%M-%S")
+  grep -n . "$burst" > "$list"
+  #rm "$burst"
+  local line=$(grep "$inf" "$list")
+  retpno=$(echo "$line" |cut -d: -f1)
+  #rm "$list"
 }

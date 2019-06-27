@@ -67,8 +67,8 @@ done
 if [[ -f data20* ]]; then rm data20*; fi
 if [[ -f list20* ]]; then rm list20*; fi
 
-mk_tfn edfd
-temp="$tfn"
+
+temp="edfd"$(date  +"%Y-%m-%d-%H-%M-%S")
 getconfig toedit
 echo "$prm" > "$temp"
 filelc "$temp"
@@ -78,8 +78,7 @@ rm $temp
 # editable pages in a contiguous block beginning at page 1, with any
 # instruction pages following those.
 
-mk_tfn list
-tflist="$tfn"
+tflist="list"$(date +"%Y-%m-%d-%H-%M-%S")
 if [[ -z "$1" ]];then
   # set up a list of the editable files.
   grep toedit config.lst > "$tflist"
@@ -103,8 +102,8 @@ fi
 # Data files names loop
 while IFS= read -u4 -r infile
 do
-  mk_tfn data
-  datafile="$tfn"
+  echo "$infile"
+  datafile="data"$(date +"%Y-%m-%d-%H-%M-%S")
   if [[ ! -z "$seltext" ]]; then
     # get only lines containing '$selext' at field 5, ie before '\n'
     grep -n "$seltext"'$' "$infile" > "$datafile"
@@ -115,6 +114,7 @@ do
   # read through the collection in $datafile
   clear
   getpageno "$infile"
+  pageno="$retpno"
   echo "Editing $pageno"
   echo "Just hit <Enter> to leave the text field unchanged."
   echo "Edit the content of the text field to a new value as desired,"

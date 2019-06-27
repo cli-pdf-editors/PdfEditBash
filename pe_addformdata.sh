@@ -26,8 +26,7 @@
 
 scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
 source "$scriptfrom"/pe_functions.sh
-mk_tfn addfd
-temp="$tfn"
+temp="addfd"$($(date +"%Y-%m-%d-%H-%M-%S"))
 getconfig toedit
 echo "$prm" > "$temp"
 filelc "$temp"
