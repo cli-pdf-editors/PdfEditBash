@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_fontfunc.sh - bash function to write font data to postscript file.
 #

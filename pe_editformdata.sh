@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# userinput.sh - input script to get user input
+# pe_editformdata.sh - script to run a user's chosen editor on a form
+#                       data file.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -18,21 +19,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-
-# where do my executeables live?
-exp=$(realpath "$0")
-exp=$(dirname "$exp")
-opfn="$1"
-# reads user data for 5 variables and emits a comma separated list.
-while :
-do
-  read -e -p "Field name on form (comment entry): " comment
-  if [[ "$comment" == "end" ]];then exit 0; fi
-  read -e -p "Location from left: " X
-  read -e -p "Location from bottom: " Y
-  read -e -p "Default text: " text
-  read -e -p "Selector: " -i "stable variable" selector
-  line="$comment","$X","$Y","$text","$selector"
-  echo "$line"
-  echo "$line" >> "$opfn"
-done
+scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
+source "$scriptfrom"/pe_functions.sh
+temp="edfd"$(date +"%Y-%m-%d-%H-%M-%S")
+getconfig toedit
+echo "$prm" > "$temp"
+filelc "$temp"
+numpages="$lc"
+rm $temp
+if [[ -z "$1" ]];then
+  read -p "Which page do you want to edit " -e page
+else
+  page="$1"
+fi
+if [[ "$page" -lt 1 ]] || [[ "$page" -gt "$numpages" ]];then
+  echo "Page number out of range: $page"
+  exit 1
+fi
+getconfig editor
+editor="$prm"
+getconfig toedit "$page"
+editfile=$(basename "$prm" pdf)dat
+"$editor" "$editfile"

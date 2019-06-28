@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_initform.sh - script to set up the parameters to edit a pdf form.
 #
@@ -18,42 +18,95 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
+scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
+source "$scriptfrom"/pe_functions.sh
+
+nametowhich()
+{ # convert the input parameter to the leftmost word in lowercase.
+  local wd=$(echo "$1" |cut -d' ' -f1)
+  # a single word returns the required result, nothing needs to be done.
+  retname=$(echo "$wd" | tr [:upper:] [:lower:])
+}
 # must be just one pdf in the working directory
 pdfcount=$(ls *.pdf | wc -l)
 if [[ "$pdfcount" -ne 1 ]];then
   echo There must be 1 pdf file only in this directory.
   exit 1
 fi
-infn=$(ls *.pdf)
-echo "$infn"
-barefn=$(basename "$infn" .pdf)
-outfn="$barefn"Filled".pdf"
-pdftk "$infn" burst output "$barefn"_%d.pdf
+inputfilename=$(ls *.pdf)
+echo "$inputfilename"
+echo name:"$inputfilename" > ./config.lst
+barefilename=$(basename "$inputfilename" .pdf)
+outputfilename="$barefilename"Filled".pdf"
+pdftk "$inputfilename" burst output "$barefilename"_%0.3d.pdf
+
 # list burst pages without the input pdf.
-ls *.pdf | grep -v "$infn" > burst.lst
-cp burst.lst toedit.lst
-# user is required to decide which of the burst pages are NOT to be
-# edited, if any. Tell her this!
-echo Edit \'toedit.lst\' and remove any names that are NOT to be edited.
-
-# The only survivor of these created files is to be 'toedit.lst'
-# Everything else is to be re-created at edit time.
-
+# want a list of the burst pages for when the pdf pages are concatented
+# onto the output PDF.
+ls *.pdf | grep -v "$inputfilename" > burst.lst
+# I also want a customised cleanup script so user redo her choices
+# after an input error.
+cpfr="$scriptfrom"/pe_cleanup.sh
+cp "$cpfr" ./cleanup.sh
 while IFS= read -r line
 do
-  rm "$line"
+  echo burst:"$line" >> config.lst
+  echo "if [[ -f $line ]];then rm $line; fi" >> ./cleanup.sh
 done < burst.lst
-rm burst.lst
-# there is a file 'doc_data.txt' created by the pdftk during the burst
-# operation. It will be reborn at edit time so kill it.
-if [[ -f doc_data.txt ]];then rm doc_data.txt; fi
-
-# I want a copy of pe_fontfunc.sh from wherever this script is running.
-rp=$(realpath "$0")
-dn=$(dirname "$rp")
-cpfr="$dn"/pe_fontfunc.sh
+chmod +x cleanup.sh
+cpfr="$scriptfrom"/pe_fontfunc.sh
 cp "$cpfr" .
 echo Edit \'pe_fontfunc.sh\' to change font name and/or size.
 
-# last job is to record the input pdf file name.
-echo "$infn" > pdfname
+# Not every page that was 'burst' off the input PDF is going to be
+# edited, sometimes these pages are just instructions to the user.
+echo "Now I need to get some more information about this form."
+filelc burst.lst
+pages="$lc"
+echo It has "$pages" pages.
+for page in {1..1000} # Only numeric literals allowed, no variables.
+do
+  read -e -p "Is page $page to be edited? " -i "YN" answer
+  if [[ "$answer" = "Y" ]];then
+    fn=$(grep "_$page.pdf" burst.lst)
+    echo toedit:"$fn" >> ./config.lst
+  fi
+  if [[ "$page" -eq "$pages" ]];then break; fi
+done
+rm burst.lst
+
+# Get the user's preferred editor and PDF viewer.
+# The user's entries may need to be massaged, eg the editor I use shows
+# as 'Geany' in my GUI program selector and I need 'geany' as the
+# search item to which. Likewise, I choose 'Atril Document Viewer' and
+# need 'atril' as the parameter for which.
+
+# get data about text editor to be used.
+prompt="Please enter the name of your preferred text editor. "
+read -e -p "$prompt" ineditor
+nametowhich "$ineditor"
+editor="$retname"
+rp=$(which "$editor")
+res=$?
+if [[ $res -eq 0 ]];then
+  echo editor:"$rp" >> ./config.lst
+else
+  echo "Could not find $ineditor, please try again."
+  ./cleanup.sh
+  exit 1
+fi
+
+# get data about PDF viewer to be used.
+prompt="Please enter the name of your preferred PDF viewer. "
+read -e -p "$prompt" inviewer
+nametowhich "$inviewer"
+viewer="$retname"
+rp=$(which "$viewer")
+res=$?
+if [[ $res -eq 0 ]];then
+  echo viewer:"$rp" >> ./config.lst
+else
+  echo "Could not find $inviewer, please try again."
+  ./cleanup.sh
+  exit 1
+fi

@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# pe_datanames.sh - script to name required data files.
+# pe_cleanup.sh - script to provide the basis for a cleanup script.
 #
 # Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
@@ -18,11 +18,5 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-if [[ ! -f toedit.lst ]];then echo run pe_initform.sh; fi
-while read -r line
-do
-  dfn=$(basename "$line" pdf)
-  dfn="$dfn"dat
-  echo "$dfn"
-  touch "$dfn"
-done < toedit.lst
+if [[ -f config.lst ]];then rm config.lst; fi
+if [[ -f doc_data.txt ]];then rm doc_data.txt; fi

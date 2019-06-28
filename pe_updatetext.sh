@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # pe_updatetext.sh - script to update data files used to
 #                   describe edits to a postscript file.
@@ -19,11 +19,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-split()
-{ # truncated split(), only want the line number.
-  lno=$(echo "$1" |cut -d':' -f1)
-}
 
+# user has the choice of naming just 1 file by page number, or just
+# running the script without it. In that case all editable data files
+# are accessed in order of page number.
+scriptfrom=$(cd ${BASH_SOURCE[0]%/*}; pwd)
+source "$scriptfrom"/pe_functions.sh
+updscript="$scriptfrom"/pe_userupdate.sh
+
+# options handling
 # set defaults
 seltext=
 
@@ -33,125 +37,96 @@ usage () { echo "How to use";
   echo field in a formatted data file.
   echo pe_updatetext.sh [option] datafile
   echo Options
-  echo -h prints this and quits.
-  echo -v sets seltext to \'variable\' so presents for editing, only
+  echo h prints this and quits.
+  echo v sets seltext to \'variable\' so presents for editing, only
   echo lines containing that value.
-  echo -S presents only lines containing \'stable\' for editing.
-  echo -s='$OPTARG' presents only those lines containing the value of
+  echo s presents only lines containing \'stable\' for editing.
+  echo S='$OPTARG' presents only those lines containing the value of
   echo '$OPTARG'
 }
 
 # options string
-options=':hvs:S'
+options=':hvS:s'
 # the leading ':' in options string is required for the errors cases.
 
 while getopts $options option
 do
-	case $option in
-		v  ) seltext="variable";shift;;
-		s  ) seltext=$OPTARG;shift;shift;;
-		S  ) seltext="stable";shift;;
-		h  ) usage; exit;;
-		\? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
-		:  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
-		*  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
-	esac
+  case $option in
+    v  ) seltext="variable";shift;;
+    S  ) seltext=$OPTARG;shift;shift;;
+    s  ) seltext="stable";shift;;
+    h  ) usage; exit;;
+    \? ) echo "Unknown option: $OPTARG" >&2; exit 1;;
+    :  ) echo "Missing option argument for $OPTARG" >&2; exit 1;;
+    *  ) echo "Unimplemented option: $OPTARG" >&2; exit 1;;
+  esac
 done
 
-infile="$1"
-if [[ ! -z "$seltext" ]]; then
-  # get only lines containing '$selext' at field 5, ie before '\n'
-  lines=$(grep -n "$seltext"'$' "$infile")
+temp="edfd"$(date  +"%Y-%m-%d-%H-%M-%S")
+getconfig toedit
+echo "$prm" > "$temp"
+filelc "$temp"
+numpages="$lc"
+rm $temp
+# the logic of setting up the list relies on the pdf form having
+# editable pages in a contiguous block beginning at page 1, with any
+# instruction pages following those.
+
+tflist="list"$(date +"%Y-%m-%d-%H-%M-%S")
+if [[ -z "$1" ]];then
+  # set up a list of the editable files.
+  grep toedit config.lst > "$tflist"
+  sed -i "s/toedit://" "$tflist"
+  sed -i "s/pdf/dat/" "$tflist"
 else
-  # get all lines but with identical output formatting as above.
-  lines=$(grep -n . "$infile")
+  page="$1"
+  echo "page" "$page"
+  if [[ "$page" -lt 1 ]] || [[ "$page" -gt "$numpages" ]];then
+    echo "Page number out of range: $page"
+    exit 1
+  fi
+  # make a list comprising just the one named file.
+  getconfig toedit "$page"
+  echo "prm" "$prm"
+  fn=$(basename "$prm" pdf)dat
+  echo fn "$fn"
+  echo "tflist" "$tflist"
+  echo "$fn" > "$tflist"
 fi
 
-########################################################################
-#     Stuff that can not be done in Bash
-#   Loop (any kind while, for etc)
-#   do
-#     init some variables
-#
-#     run some interactive script for user input
-#
-#   done < data_file
-#
-#   What does work is a purpose built interactive script.
-#
-#   So what follows is an attempt to do just that.
-########################################################################
-
-# set up the script header
-scriptfile=runupdate.sh
-cat << ENDheader > ./"$scriptfile"
-#!/bin/bash
-split() # splits a line into variables
-{
-  local lline="\$1"
-  lno=\$(echo "\$lline" | cut -d':' -f1) # grep -n gave us \$lline
-  local dline=\$(echo "\$lline" | cut -d':' -f2) # all of the rest
-  comment=\$(echo "\$dline" |cut -d"," -f1)
-  x=\$(echo "\$dline" |cut -d"," -f2) # x, points from left of form.
-  y=\$(echo "\$dline" |cut -d"," -f3) # y, points from bottom of form.
-  text=\$(echo "\$dline" |cut -d"," -f4) # text to print on form.
-  selector=\$(echo "\$dline" |cut -d"," -f5) # word to choose line.
-}
-
-ENDheader
-
-# Now, generate the main part of the script
-
-# provide some instructions for the user.
-cat << ENDinst >> ./"$scriptfile"
-dfn="\$1"
-echo "\$dfn"
-echo This program will output a prompt, text followed by ':', then the \
-text that exists. You may change, delete and replace this text any way \
-you like.
-echo To retain any existing text, just hit 'Enter' without altering \ anything.
-echo If there is any field that you want to be empty just replace the \
-field content with an underscore \('_'\).
-read -e -p 'Enter to continue:' nothing
-echo
-ENDinst
-
-# put the data lines in a temporary file
-tempfile=tempfile$$
-rm ./tempfile*
-cat << END1 > ./"$tempfile"
-$lines
-END1
-# these data lines may have embedded spaces so wrap them with '"'.
-sed -i "s/.*/\"&\"/" ./"$tempfile"
-# had difficulty removing an eol escape from last line so:
-lc=$(wc -l ./"$tempfile")
-lc=$(echo "$lc" |cut -d' ' -f1)
-let lc--
-lastline=$(tail -n1 ./"$tempfile")
-lines=$(head -n"$lc" ./"$tempfile")
-# process data lines in a for loop.
-echo "for line in" > ./"$tempfile"  # file truncated and rewritten
-cat << END2 >> ./"$tempfile"
-$lines
-END2
-# need to escape the newlines in the data line block.
-sed -i 's!$! \\!' ./"$tempfile"
-# the last line eol is not escaped
-echo "$lastline" >> ./"$tempfile"
-# actual processing for the loop
-cat << END3 >> ./"$tempfile"
+# Data files names loop
+while IFS= read -u4 -r infile
 do
-  split "\$line"
-  read -e -p "\$comment"": " -i "\$text" textin
-  if [[ "\$text" != "\$textin" ]];then
-    sed -i "\$lno s!\$text!\$textin!" "\$dfn"
+  datafile="data"$(date +"%Y-%m-%d-%H-%M-%S")
+  if [[ ! -z "$seltext" ]]; then
+    # get only lines containing '$selext' at field 5, ie before '\n'
+    grep -n "$seltext"'$' "$infile" > "$datafile"
+  else
+    # get all lines but with identical output formatting as above.
+    grep -n . "$infile" > "$datafile"
   fi
-done
-END3
+  # read through the collection in $datafile
+  clear
+  getpageno "$infile"
+  pageno="$retpno"
+  echo "Editing page ""$pageno"
+  echo "Just hit <Enter> to leave the text field unchanged."
+  echo "Edit the content of the text field to a new value as desired,"
+  echo "then <Enter> to accept the change."
+  echo
+  while IFS=:, read -u3 -r lno prompt X Y text seltext
+  do
+    read -e -p "$prompt"" " -i "$text" intext
+    if [[ "$intext" != "$text" ]];then
+      # sometimes "$prompt" and "$text" can have the same string value
+      # I only want to change "$text".
+      srch="$X","$Y","$text"
+      repl="$X","$Y","$intext"
+      sed -i "s/$srch/$repl/" "$infile"
+    fi
+  done 3< "$datafile"
+  rm "$datafile"
+done 4< "$tflist"
+rm "$tflist"
 
-# append the temp file to the script
-cat ./"$tempfile" >> ./"$scriptfile"
-echo 
-# so now run it
-./"$scriptfile" ./"$infile" 
+
