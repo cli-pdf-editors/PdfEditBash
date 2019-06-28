@@ -21,7 +21,7 @@ filelc()
 getconfig()
 {
   if [[ ! -f ./config.lst ]];then
-    Echo "configuration file config.lst does not exist."
+    echo "configuration file config.lst does not exist."
     exit 1
   fi
   if [[ -z "$1" ]];then
