@@ -46,12 +46,12 @@ getpageno()
   local inf=$(basename "$1" dat)pdf
   echo "$inf"
   # list of burst pages
-  local burst="burst"$(date +"%Y-%m-%d-%H-%M-%S")
-  grep 'burst' config.lst > "$burst"
-  local list="list"$(date +"%Y-%m-%d-%H-%M-%S")
-  grep -n . "$burst" > "$list"
-  #rm "$burst"
-  local line=$(grep "$inf" "$list")
+  local gpnburst="gpnburst"$(date +"%Y-%m-%d-%H-%M-%S")
+  grep 'burst' config.lst > "$gpnburst"
+  local gpnlist="gpnlist"$(date +"%Y-%m-%d-%H-%M-%S")
+  grep -n . "$gpnburst" > "$gpnlist"
+  rm "$gpnburst"
+  local line=$(grep "$inf" "$gpnlist")
   retpno=$(echo "$line" |cut -d: -f1)
-  #rm "$list"
+  rm "$gpnlist"
 }

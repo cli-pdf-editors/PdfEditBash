@@ -62,12 +62,6 @@ do
   esac
 done
 
-# Never did find a workable tidy way to quit early, so cleanup
-# any temp file crap lying around from a Ctrl-C exit.
-if [[ -f data20* ]]; then rm data20*; fi
-if [[ -f list20* ]]; then rm list20*; fi
-
-
 temp="edfd"$(date  +"%Y-%m-%d-%H-%M-%S")
 getconfig toedit
 echo "$prm" > "$temp"
@@ -86,23 +80,23 @@ if [[ -z "$1" ]];then
   sed -i "s/pdf/dat/" "$tflist"
 else
   page="$1"
-  echo page "$page"
+  echo "page" "$page"
   if [[ "$page" -lt 1 ]] || [[ "$page" -gt "$numpages" ]];then
     echo "Page number out of range: $page"
     exit 1
   fi
   # make a list comprising just the one named file.
   getconfig toedit "$page"
-  echo prm "$prm"
+  echo "prm" "$prm"
   fn=$(basename "$prm" pdf)dat
   echo fn "$fn"
-  echo tflist "$tflist"
+  echo "tflist" "$tflist"
   echo "$fn" > "$tflist"
 fi
+
 # Data files names loop
 while IFS= read -u4 -r infile
 do
-  echo "$infile"
   datafile="data"$(date +"%Y-%m-%d-%H-%M-%S")
   if [[ ! -z "$seltext" ]]; then
     # get only lines containing '$selext' at field 5, ie before '\n'
@@ -115,7 +109,7 @@ do
   #clear
   getpageno "$infile"
   pageno="$retpno"
-  echo "Editing $pageno"
+  echo "Editing page ""$pageno"
   echo "Just hit <Enter> to leave the text field unchanged."
   echo "Edit the content of the text field to a new value as desired,"
   echo "then <Enter> to accept the change."
