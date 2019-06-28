@@ -106,7 +106,7 @@ do
     grep -n . "$infile" > "$datafile"
   fi
   # read through the collection in $datafile
-  #clear
+  clear
   getpageno "$infile"
   pageno="$retpno"
   echo "Editing page ""$pageno"
