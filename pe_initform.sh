@@ -68,7 +68,7 @@ for page in {1..1000} # Only numeric literals allowed, no variables.
 do
   read -e -p "Is page $page to be edited? " -i "YN" answer
   if [[ "$answer" = "Y" ]];then
-    x=printf "_%0.3d.pdf" "$page"
+    x=$(printf "_%0.3d.pdf" "$page")
     fn=$(grep "$x" burst.lst)
     echo toedit:"$fn" >> ./config.lst
   fi
