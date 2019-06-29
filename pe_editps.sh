@@ -84,8 +84,9 @@ fi
 getconfig "name"
 inputfile="$prm"
 echo "$inputfile"
-basename=$(basename "$inputfile" .pdf)
-outputfile="$basename"Filled.pdf
+barefilename=$(basename "$inputfile" .pdf)
+pdftk "$inputfile" burst output "$barefilename"_%0.3d.pdf
+outputfile="$barefilename"Filled.pdf
 if [[ -f "$outputfile" ]];then rm "$outputfile"; fi
 # generate the file toedit.lst from config.lst.
 grep '^toedit' config.lst > toedit.lst
