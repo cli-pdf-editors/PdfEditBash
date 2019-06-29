@@ -146,5 +146,5 @@ rm toedit.lst
 
 if [[ runviewer -eq 1 ]]; then
   viewer=$(grep 'viewer:' config.lst |cut -d: -f2)
-  "$viewer" "$outputfile"
+  "$viewer" "$outputfile" &
 fi
