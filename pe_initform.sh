@@ -44,7 +44,7 @@ pdftk "$inputfilename" burst output "$barefilename"_%0.3d.pdf
 # want a list of the burst pages for when the pdf pages are concatented
 # onto the output PDF.
 ls *.pdf | grep -v "$inputfilename" > burst.lst
-# I also want a customised cleanup script so user redo her choices
+# I also want a customised cleanup script so user can redo her choices
 # after an input error.
 cpfr="$scriptfrom"/pe_cleanup.sh
 cp "$cpfr" ./cleanup.sh
