@@ -3,7 +3,7 @@
 # pe_calcpoints.sh - script to calculate points distance from other
 #                    units.
 #
-# Copyright 2018 Robert L (Bob) Parker rlp1938@gmail.com
+# Copyright 2019 Robert L (Bob) Parker rlp1938@gmail.com
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -82,13 +82,11 @@ usage () {
 # form. These apply to centimeter measurements.
 
 # X distances - left of form to placement position
-mx=31.05960264900662251655
-cx=-33.62582781456953642377
+mx=30.98591549295774647887
+cx=-34.22535211267605633799
 # Y distances - bottom of form to placement position.
-my=31.01321585903083700440
-cy=-35.44493392070484581490
-
-
+my=31.00775193798449612403
+cy=-35.81395348837209302323
 
 # options string
 options=':ifcmph'
