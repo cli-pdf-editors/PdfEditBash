@@ -23,8 +23,15 @@
 tf=status$(date +"%Y-%m-%d-%H-%M-%S")
 echo "$tf"
 for f in pe_*.sh
+# if any script has never been copied to /usr/local/bin, then the file
+# pairing logic further down will generate nonsense so just quit on
+# that error and get it fixed first.
 do
   md5sum /usr/local/bin/"$f" "$f" >> "$tf"
+  if [[ $? -ne 0 ]];then
+    rm "$tf"
+    exit 1;
+  fi
 done
 
 # Examine the sums of the top 2 lines and report any that differ.
