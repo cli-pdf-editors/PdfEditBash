@@ -74,8 +74,11 @@ source "$scriptfrom"/pe_sanitisedata.sh
 
 # the path pe_fontfunc.sh forces this to load the script from where
 # the script is invoked from, not from where running script resides.
-source pe_fontfunc.sh  # writes the font spec to a postscript file.
-source pe_functions.sh
+
+# If I don't make this ./pe_fontfunc.sh not pe_fontfunc.sh bash
+# guarantees to mess it up.
+source ./pe_fontfunc.sh  # writes the font spec to a postscript file.
+source "$scriptfrom"/pe_functions.sh
 
 if [[ ! -f config.lst ]];then
   echo Run pe_initform.sh with a copy of your pdf form in this directory.
@@ -105,6 +108,7 @@ do
   # here will be the loop reading the data file describing the edits.
   editdata=$(basename "$pdftoedit" .pdf)
   editdata="$editdata".dat
+  echo editdata is "$editdata"
   sanitise "$editdata"
   while IFS= read -u3 -r line
   do
