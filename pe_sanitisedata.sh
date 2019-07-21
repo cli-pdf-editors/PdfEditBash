@@ -24,6 +24,6 @@
 sanitise()
 {
   local datafile="$1"
-  sed -i "s!,,!,_,!"
-  sed -i "s!, ,!,_,!"
+  sed -i "s!,,!,_,!" "$datafile"
+  sed -i "s!, ,!,_,!" "$datafile"
 }
