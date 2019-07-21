@@ -109,7 +109,15 @@ do
   editdata=$(basename "$pdftoedit" .pdf)
   editdata="$editdata".dat
   echo editdata is "$editdata"
-  sanitise "$editdata"
+  # sanatise data - the procedure replaces any text field that is empty,
+  # ie ',,' or comprising a single space ', ,', with ',_,'. That char is
+  # converted always to a single space on output. I test for a need to
+  # use the procedure because using it makes my editor demand a reload
+  # after use which is annoying.
+  grep ',,' "$editdata" > /dev/null
+  if [[ $? -eq 0 ]]; then sanitise "$editdata"; fi
+  grep ', ,' "$editdata" > /dev/null
+  if [[ $? -eq 0 ]]; then sanitise "$editdata"; fi
   while IFS= read -u3 -r line
   do
     echo "$line"
