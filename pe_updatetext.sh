@@ -32,17 +32,22 @@ updscript="$scriptfrom"/pe_userupdate.sh
 seltext=
 
 # write actual usage
-usage () { echo "How to use";
-  echo pe_updatetext.sh interactively allows the user edit the text
-  echo field in a formatted data file.
-  echo pe_updatetext.sh [option] datafile
+usage () {
+  cat << ENDhelp
+  pe_updatetext.sh [option] [pageno]
+
+  pe_updatetext.sh interactively allows the user to edit the text field
+  in a formatted data file. If pageno is not entered all editable pages
+  will be presented. If no options are selected, all text fields are
+  presented for editing.
   echo Options
-  echo h prints this and quits.
-  echo v sets seltext to \'variable\' so presents for editing, only
-  echo lines containing that value.
-  echo s presents only lines containing \'stable\' for editing.
-  echo S='$OPTARG' presents only those lines containing the value of
-  echo '$OPTARG'
+  -h prints this and quits.
+  -v sets seltext to \'variable\' so presents for editing, only lines
+  ending with that value.
+  -s presents only lines ending with \'stable\' for editing.
+  -S='$OPTARG' presents only those lines ending with the value of
+  '$OPTARG'
+ENDhelp
 }
 
 # options string
@@ -116,13 +121,34 @@ do
   echo
   while IFS=:, read -u3 -r lno prompt X Y text seltext
   do
+    # empty lines permitted in the data.
+    if [[ -z "$prompt" ]];then continue; fi
+    # comment out with '#' permitted in the data.
+    echo "$prompt" |grep '#' > /dev/null
+    if [[ $? -eq 0 ]]; then continue; fi
+    # sometimes seltext has the value 'immutable', do not edit.
+    if [[ "$selext" = "immutable" ]];then continue; fi
     read -e -p "$prompt"" " -i "$text" intext
+    # protect against an embedded comma.
+    text=$(echo "$text" | tr ',' ' ')
     if [[ "$intext" != "$text" ]];then
       # sometimes "$prompt" and "$text" can have the same string value
       # I only want to change "$text".
       srch="$X","$Y","$text"
       repl="$X","$Y","$intext"
-      sed -i "s/$srch/$repl/" "$infile"
+      # text fields may have '/' or '!' inside but not both.
+      echo "$intext" |grep '/' > dev/null
+      if [[ $? -eq 0 ]]; then
+        sed -i "s!$srch!$repl!" "$infile"
+      else
+        echo "$intext" |grep '!' > dev/null
+        if [[ $? -eq 0 ]]; then
+          echo "You may not have both '!' and '/' in your text field."
+          echo "Edit with pe_editformdata.sh if you must include these."
+        else
+          sed -i "s/$srch/$repl/" "$infile"
+        fi
+      fi
     fi
   done 3< "$datafile"
   rm "$datafile"
