@@ -121,7 +121,13 @@ do
   while IFS= read -u3 -r line
   do
     echo "$line"
+    # I want the data file to have comment entries if the person editing
+    # it wants to use them. Also required is the ability to have empty
+    # lines should the user desire it.
+    if [[ -z "$line" ]]; then continue; fi  # '\n' stripped ???
     comment=$(echo "$line" | cut -d',' -f1)
+    echo $comment |grep '#' > /dev/null
+    if [[ $? -eq 0 ]];then continue; fi # line is commented out in file.
     comment="%""$comment"  # postscript comment
     echo "$comment" >> mid
     echo "newpath" >> mid
