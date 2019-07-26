@@ -52,9 +52,9 @@ usage () {
   EXAMPLES
   pe_interpolate.sh Y line,100,220,X,stable wtf,100,160,X,whatever 4
       line1,100,220,X,stable
-      line2,100,205,X,stable
-      line3,100,190,X,stable
-      line4,100,180,X,stable
+      line2,100,200,X,stable
+      line3,100,180,X,stable
+      line4,100,160,X,stable
   Obviously, when interpolating in the Y direction field 1 will need
   to be edited afterward.
 
